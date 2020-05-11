@@ -13,7 +13,6 @@
 
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 #include "simulation.h"
 #include <iostream>
 #include <emscripten.h>
@@ -76,6 +75,7 @@ void Simulation::tick()
 
     int numberInfected = 0;
 
+    //deze tick moet aangepast.
     for(Subject& s : _subjects)
     {
         s.set_x(s.x() + s.dx() * dt);
@@ -86,6 +86,8 @@ void Simulation::tick()
             numberInfected++;
         }
     }
+    //dit moet aangepast.
+    
 
     if(counter % 30 == 0)
     {
