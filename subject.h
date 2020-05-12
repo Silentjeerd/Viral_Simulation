@@ -14,7 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#pragma once 
+#pragma once
+
+#include "MovementStrategy.h"
+#include "RegularMovementStrategy.h"
 
 namespace corsim
 {
@@ -23,6 +26,7 @@ namespace corsim
  * A subject is an entity within the simulation. It is modeled as a
  * circle in 2D and can be infected.
  */
+
 class Subject
 {
     public:
@@ -40,10 +44,13 @@ class Subject
         void infect();
         double angle();
         double speed();
+        void set_moveStrat(MovementStrategy& newStrat);
+        void executeStrat(double dt);
     private:
         double _x = 0,_y = 0, _dx = 0, _dy = 0;
         bool _infected = false;
         int _radius = 0;
+        MovementStrategy *_moveStrat;
 };
 
 };

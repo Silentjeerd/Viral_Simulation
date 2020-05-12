@@ -22,6 +22,7 @@
 #include "canvas.h"
 #include "statistics_handler.h"
 
+
 namespace corsim
 {
 
@@ -42,13 +43,14 @@ class Simulation
         void static_collision(Subject& s1, Subject& s2, bool emergency);
         void tick();
         void draw_to_canvas();
-
+        
         std::unique_ptr<Canvas> _canvas;
         std::vector<Subject> _subjects;
         std::unique_ptr<StatisticsHandler> _sh;
         bool running = false;
         int tick_speed = 1000/30;
         int _sim_width = 800, _sim_height = 500;
+        
 };
 
 }

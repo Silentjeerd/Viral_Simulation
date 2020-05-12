@@ -14,8 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+
 #include "subject.h"
 #include <math.h>
+
 
 namespace corsim
 {
@@ -26,6 +28,7 @@ Subject::Subject(int x, int y, int radius, bool infected)
     this->_y = y;
     this->_radius = radius;
     this->_infected = infected;
+
 }
 
 double Subject::x()
@@ -91,6 +94,18 @@ double Subject::angle()
 double Subject::speed()
 {
     return sqrt(_dx * _dx + _dy * _dy);
+}
+
+void Subject::set_moveStrat(MovementStrategy& newStrat){
+    this->_moveStrat = &newStrat;
+}
+
+void Subject::executeStrat(double dt){
+    //this->_moveStrat->move(this.x,this.dx,this.y,this.dy,dingetje);
+    //this->set_x(_moveStrat->move(this->x(),this->dx(),dt));
+    //this->set_y(_moveStrat->move(this->y(),this->dy(),dt));
+            //s.set_x(s.x() + s.dx() * dt);
+        //s.set_y(s.y() + s.dy() * dt);
 }
 
 }

@@ -1,13 +1,13 @@
-#pragma once 
-
+#include "subject.h"
+#pragma once
 namespace corsim
 {
     
 class MovementStrategy
 {
     public:
-        virtual void tick() = 0;
-    private:
+        MovementStrategy(){};
+        virtual double move(double i,double di,double dt) = 0;
 
 };
 

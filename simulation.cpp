@@ -17,6 +17,9 @@
 #include <iostream>
 #include <emscripten.h>
 #include <math.h>
+#include "MovementStrategy.h"
+#include "RegularMovementStrategy.h"
+#include "LockdownMovementStrategy.h"
 
 namespace corsim
 {
@@ -75,11 +78,13 @@ void Simulation::tick()
 
     int numberInfected = 0;
 
+
     //deze tick moet aangepast.
     for(Subject& s : _subjects)
     {
-        s.set_x(s.x() + s.dx() * dt);
-        s.set_y(s.y() + s.dy() * dt);
+        //s.set_x(s.x() + s.dx() * dt);
+        //s.set_y(s.y() + s.dy() * dt);
+        s.executeStrat(dt);
 
         if(s.infected())
         {

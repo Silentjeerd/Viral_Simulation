@@ -20,6 +20,9 @@
 #include <math.h>
 #include "html_canvas.h"
 #include "ChartJS_handler.h"
+#include "MovementStrategy.h"
+#include "RegularMovementStrategy.h"
+#include "LockdownMovementStrategy.h"
 
 //Constants to control the simulation
 const int SUBJECT_COUNT = 200;
@@ -29,7 +32,7 @@ const int SUBJECT_RADIUS = 2;
 
 int main() {
     corsim::Simulation s(SIM_WIDTH,SIM_HEIGHT,std::make_unique<corsim::HTMLCanvas>(30,150,SIM_WIDTH,SIM_HEIGHT),
-        std::make_unique<corsim::ChartJSHandler>());
+    std::make_unique<corsim::ChartJSHandler>());
 
     //Code to randomly generate certain numbers, which is done by using certain distributions
     std::random_device rd;
@@ -39,15 +42,25 @@ int main() {
     std::uniform_real_distribution<double> dist_dx(-1.0, 1.0);
     std::uniform_real_distribution<double> dist_dy(-1.0, 1.0);
 
+    //Instantieer beide movementStrategys
+    corsim::MovementStrategy* regularStrat = corsim::RegularMovementStrategy();
+    corsim::MovementStrategy* lockdownStrat = corsim::LockdownMovementStrategy();
+
     for (int i = 0; i<SUBJECT_COUNT; ++i)
     {
         double x = dist_w(mt); //Randomly generate x position
         double y = dist_h(mt); //Randomly generate y position
-        
+
         corsim::Subject su(x,y,SUBJECT_RADIUS,false);
 
         su.set_dx(dist_dx(mt));
         su.set_dy(dist_dy(mt));
+        //0 t/m 49 (25%) krijgt de regularStrat. 75% gaat op lockdown.
+        if(i < 300){
+           su.set_moveStrat(regularStrat);
+        }else{
+            su.set_moveStrat(lockdownStrat);
+        }
 
         if(i == SUBJECT_COUNT-1)
         {

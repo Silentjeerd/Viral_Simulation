@@ -1,16 +1,12 @@
-#pragma once 
-
+#pragma once
 namespace corsim
 {
     
-class RegularMovementStrategy: public MovementStrategy
+class RegularMovementStrategy : public MovementStrategy
 {
     public:
-        void tick();
-
-    private:
-
-
+        RegularMovementStrategy(){};
+        double move(double i,double di,double dt);
 };
 
 };
