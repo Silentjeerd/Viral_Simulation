@@ -67,6 +67,7 @@ void Simulation::runB()
 
     running = true;
     this->setOpdrachtBMovementStrats();
+    this->_opdrachtB = true;
     while(true)
     {
         this->tick();
@@ -153,11 +154,10 @@ void Simulation::tick()
             numberInfected++;
         }
     }
+    //Indien opdrachtB wordt gedraait:
     //Als er nog geen lockdown is en het aantal infected is 100 of meer dan roept hij een de lockdown op.
-    //Dit heb ik voor deze opdracht even binnen de tick gezet omdat dit bij opdracht A niet zo snel behaald wordt.
-    if(!this->_lockDown && numberInfected >= 100){
+    if(this->_opdrachtB && !this->_lockDown && numberInfected >= 100){
         this->opdrachtBLockdown();
-
     }
     //dit moet aangepast.
     

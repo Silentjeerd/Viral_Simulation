@@ -55,6 +55,7 @@ class Simulation
         bool running = false;
 
         //boolean om bij te houden of er al sprake is van een lockdown.
+        bool _opdrachtB = false;
         bool _lockDown = false;
         int tick_speed = 1000/30;
         int _sim_width = 800, _sim_height = 500;
