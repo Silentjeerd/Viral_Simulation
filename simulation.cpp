@@ -17,9 +17,17 @@
 #include <iostream>
 #include <emscripten.h>
 #include <math.h>
+
+//Includen van de Strategieën
 #include "MovementStrategy.h"
 #include "RegularMovementStrategy.h"
-#include "LockdownMovementStrategy.h"
+#include "ALockdownMovementStrategy.h"
+#include "BLockdownMovementStrategy.h"
+
+//instantieren van de 3 strategieën
+corsim::RegularMovementStrategy regStrat;
+corsim::ALockdownMovementStrategy aLockStrat;
+corsim::BLockdownMovementStrategy bLockStrat;
 
 namespace corsim
 {
@@ -32,15 +40,16 @@ void Simulation::add_subject(Subject&& s)
     this->_subjects.emplace_back(std::move(s));
 }
 
-void Simulation::run()
+void Simulation::runA()
 {
+
     if(running)
     {
         return;
     }
 
     running = true;
-
+    this->setOpdrachtAMovementStrats();
     while(true)
     {
         this->tick();
@@ -48,7 +57,61 @@ void Simulation::run()
     }
 }
 
+void Simulation::runB()
+{
+
+    if(running)
+    {
+        return;
+    }
+
+    running = true;
+    this->setOpdrachtBMovementStrats();
+    while(true)
+    {
+        this->tick();
+        emscripten_sleep(tick_speed);
+    }
+}
 int counter  = 0;
+
+//Eigen functie opdracht A
+void Simulation::setOpdrachtAMovementStrats(){
+
+    //int max = this->_subjects.size();
+    int vijfentwintigprocent = this->_subjects.size() / 4;
+    for(int i = 0; i < this->_subjects.size();i++){
+        //de eerste 25% krijgt de regularStrat. 75% gaat op lockdown.
+        if(i < vijfentwintigprocent){
+          this->_subjects.at(i).set_moveStrat(&regStrat);
+        }else{
+           this->_subjects.at(i).set_moveStrat(&aLockStrat);
+        }
+    }
+}
+
+//Eigen functie opdracht B1
+void Simulation::setOpdrachtBMovementStrats(){
+    //Elk subject begint bij deze opdracht met normale movement.
+    for(Subject& s : _subjects)
+    {
+        s.set_moveStrat(&regStrat);
+    }
+}
+
+void Simulation::opdrachtBLockdown(){
+    //loopt door alle subjects en zet 3/4 op lockdownB.
+    int vijfentwintigprocent = this->_subjects.size() / 4;
+    for(int i = 0; i < this->_subjects.size();i++){   
+        // >= omdat deze int met de verdeling van 200 subjects 50 is.
+        // er wordt begonnen bij index 0 dus de eerste 50 zijn 0-49. de overige 75% is index 50+ 
+        if(i >= vijfentwintigprocent){
+           this->_subjects.at(i).set_moveStrat(&bLockStrat);
+        }
+    }
+    this->_lockDown = true;
+}
+
 
 void Simulation::tick()
 {
@@ -79,17 +142,22 @@ void Simulation::tick()
     int numberInfected = 0;
 
 
-    //deze tick moet aangepast.
+    //Dit stukje aanpassen.
     for(Subject& s : _subjects)
     {
-        //s.set_x(s.x() + s.dx() * dt);
-        //s.set_y(s.y() + s.dy() * dt);
+        //Dit execute de movementStrategy die het subject heeft.
         s.executeStrat(dt);
 
         if(s.infected())
         {
             numberInfected++;
         }
+    }
+    //Als er nog geen lockdown is en het aantal infected is 100 of meer dan roept hij een de lockdown op.
+    //Dit heb ik voor deze opdracht even binnen de tick gezet omdat dit bij opdracht A niet zo snel behaald wordt.
+    if(!this->_lockDown && numberInfected >= 100){
+        this->opdrachtBLockdown();
+
     }
     //dit moet aangepast.
     

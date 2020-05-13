@@ -20,9 +20,7 @@
 #include <math.h>
 #include "html_canvas.h"
 #include "ChartJS_handler.h"
-#include "MovementStrategy.h"
-#include "RegularMovementStrategy.h"
-#include "LockdownMovementStrategy.h"
+
 
 //Constants to control the simulation
 const int SUBJECT_COUNT = 200;
@@ -42,10 +40,6 @@ int main() {
     std::uniform_real_distribution<double> dist_dx(-1.0, 1.0);
     std::uniform_real_distribution<double> dist_dy(-1.0, 1.0);
 
-    //Instantieer beide movementStrategys
-    corsim::MovementStrategy* regularStrat = corsim::RegularMovementStrategy();
-    corsim::MovementStrategy* lockdownStrat = corsim::LockdownMovementStrategy();
-
     for (int i = 0; i<SUBJECT_COUNT; ++i)
     {
         double x = dist_w(mt); //Randomly generate x position
@@ -55,12 +49,6 @@ int main() {
 
         su.set_dx(dist_dx(mt));
         su.set_dy(dist_dy(mt));
-        //0 t/m 49 (25%) krijgt de regularStrat. 75% gaat op lockdown.
-        if(i < 300){
-           su.set_moveStrat(regularStrat);
-        }else{
-            su.set_moveStrat(lockdownStrat);
-        }
 
         if(i == SUBJECT_COUNT-1)
         {
@@ -70,5 +58,5 @@ int main() {
         s.add_subject(std::move(su));
     }  
 
-    s.run();
+    s.runA();
 }

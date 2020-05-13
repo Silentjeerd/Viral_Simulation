@@ -15,10 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
-
 #include "MovementStrategy.h"
-#include "RegularMovementStrategy.h"
-
 namespace corsim
 {
     
@@ -44,12 +41,16 @@ class Subject
         void infect();
         double angle();
         double speed();
-        void set_moveStrat(MovementStrategy& newStrat);
+        //Functies voor de opdrachten.
+        void set_moveStrat(MovementStrategy *newStrat);
         void executeStrat(double dt);
+        //
+
     private:
         double _x = 0,_y = 0, _dx = 0, _dy = 0;
         bool _infected = false;
         int _radius = 0;
+        //pointer naar subject zijn MovementStrategy.
         MovementStrategy *_moveStrat;
 };
 
